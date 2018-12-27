@@ -1,9 +1,29 @@
 import React from "react";
 
-const activateLasers = () => {};
+const actionLink = () => {
+  const handleClick = e => {
+    e.preventDefault();
+    console.log("The link was clicked.");
+  };
+
+  return (
+    <a href="#" onClick={handleClick}>
+      Click me
+    </a>
+  );
+};
+
+const editCell = (id, e) => {
+  console.log(`The button ${id} was clicked.`);
+};
 
 const renderButton = id => {
-  return <button onClick={activateLasers}>Activate Lasers</button>;
+  return (
+    // <button key={id} onClick={editCell}>
+    //   Edit Cell
+    // </button>
+    <button onClick={e => editCell(id, e)}>Edit Cell</button>
+  );
 };
 
 const renderData = (rows, cols) =>
@@ -12,7 +32,8 @@ const renderData = (rows, cols) =>
       {cols.map(col => (
         <td key={col.name}>{row[col.name]}</td>
       ))}
-      <td key={row.id}>{renderButton(row.id)}</td>
+      <td key={row.id}>{actionLink()}</td>
+      <td>{renderButton(row.id)}</td>
     </tr>
   ));
 
@@ -21,6 +42,7 @@ const renderEmptyState = cols => (
     <td colSpan={cols.length}>There is no data in this table</td>
   </tr>
 );
+
 const DataTable = props => {
   return (
     <table>
