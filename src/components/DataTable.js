@@ -18,12 +18,7 @@ const editCell = (id, e) => {
 };
 
 const renderButton = id => {
-  return (
-    // <button key={id} onClick={editCell}>
-    //   Edit Cell
-    // </button>
-    <button onClick={e => editCell(id, e)}>Edit Cell</button>
-  );
+  return <button onClick={e => editCell(id, e)}>Edit Cell</button>;
 };
 
 const renderData = (rows, cols) =>

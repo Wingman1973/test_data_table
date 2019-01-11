@@ -44,7 +44,7 @@ it("renders in table rows based on provided columns", () => {
   // Loop through each row and check the content
   rowsTable.forEach((tr, rowIndex) => {
     const cells = tr.find("td");
-    expect(cells).toHaveLength(cols.length + 1);
+    expect(cells).toHaveLength(cols.length + 2);
     expect(cells.at(0).text()).toEqual(rows[rowIndex].id.toString());
     expect(cells.at(1).text()).toEqual(rows[rowIndex].name);
     expect(cells.at(2).text()).toEqual(rows[rowIndex].email);
