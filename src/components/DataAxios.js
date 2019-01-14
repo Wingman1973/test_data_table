@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import axios from "axios";
+import {
+  withHitsNull,
+  withHitsEmpty,
+  withLoadingIndicator,
+  withError,
+} from "./HocConditionalRender";
+import ShowData from "./ShowData";
 
 const API = "https://hn.algolia.com/api/v1/search?query=";
 const DEFAULT_QUERY = "redux";
 
-class AxiosData extends Component {
+class DataAxios extends Component {
   constructor(props) {
     super(props);
 
@@ -34,25 +41,13 @@ class AxiosData extends Component {
 
   render() {
     const { hits, isLoading, error } = this.state;
+    const WithHitsNull = withHitsNull(ShowData, "hits");
+    const WithHitsEmpty = withHitsEmpty(WithHitsNull, "hits");
+    const WithIsLoading = withLoadingIndicator(WithHitsEmpty);
+    const WithError = withError(WithIsLoading);
 
-    if (error) {
-      return <p>{error.message}</p>;
-    }
-
-    if (isLoading) {
-      return <p>Loading ...</p>;
-    }
-
-    return (
-      <ul>
-        {hits.map(hit => (
-          <li key={hit.objectID}>
-            <a href={hit.url}>{hit.title}</a>
-          </li>
-        ))}
-      </ul>
-    );
+    return <WithError error={error} isLoading={isLoading} hits={hits} />;
   }
 }
 
-export default AxiosData;
+export default DataAxios;
