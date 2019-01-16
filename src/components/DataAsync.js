@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
+//import { compose } from "recompose";
 import {
-  withHitsNull,
-  withHitsEmpty,
+  withNull,
+  withEmpty,
   withLoadingIndicator,
   withError,
 } from "./HocConditionalRender";
@@ -42,13 +43,20 @@ class DataAsync extends Component {
 
   render() {
     const { hits, isLoading, error } = this.state;
+    const conditionFn = props => !props.hits;
+    const HitsWithConditionalRendering = withError(
+      withLoadingIndicator(
+        withEmpty(withNull(ShowData, conditionFn), conditionFn)
+      )
+    );
 
-    const WithHitsNull = withHitsNull(ShowData, "hits");
-    const WithHitsEmpty = withHitsEmpty(WithHitsNull, "hits");
-    const WithIsLoading = withLoadingIndicator(WithHitsEmpty);
-    const WithError = withError(WithIsLoading);
-
-    return <WithError error={error} isLoading={isLoading} hits={hits} />;
+    return (
+      <HitsWithConditionalRendering
+        error={error}
+        isLoading={isLoading}
+        hits={hits}
+      />
+    );
   }
 }
 

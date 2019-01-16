@@ -1,12 +1,12 @@
 import React from "react";
 
-const withHitsNull = (Component, field) => props =>
-  !props[field] ? null : <Component {...props} />;
+const withNull = (Component, conditionFn) => props =>
+  !conditionFn ? null : <Component {...props} />;
 
-const withHitsEmpty = (Component, field) => props =>
-  !props[field].length ? (
+const withEmpty = (Component, conditionFn) => props =>
+  !conditionFn.length ? (
     <tr>
-      <td colSpan="{!props[field].length}">There is no data to show</td>
+      <td colSpan="{!props.length}">There is no data to show</td>
     </tr>
   ) : (
     <Component {...props} />
@@ -24,4 +24,4 @@ const withLoadingIndicator = Component => ({ isLoading, ...others }) =>
 const withError = Component => ({ error, ...others }) =>
   error ? <p>{error.message}</p> : <Component {...others} />;
 
-export { withHitsNull, withHitsEmpty, withLoadingIndicator, withError };
+export { withNull, withEmpty, withLoadingIndicator, withError };

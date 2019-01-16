@@ -18,9 +18,6 @@ const rows = [
   { id: 25, name: "Amelia", email: "amelia@example.com" },
 ];
 
-// const emptyCols = [];
-// const emptyRows = [];
-
 const actionLink = () => {
   const handleClick = e => {
     e.preventDefault();
