@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import { compose } from "recompose";
 import {
-  withMaybeFP,
-  withEmptyFP,
+  withMaybe,
+  withEither,
   withNull,
   withEmpty,
   withLoadingIndicator,
@@ -45,19 +45,40 @@ class DataAsync extends Component {
 
   render() {
     const { hits, isLoading, error } = this.state;
-    const conditionFn = props => !props.hits;
+    const isEmptyConditionFn = props => !props.hits;
+    const conditionFnlength = props => !props.hits.length;
+    const isLoadingConditionFn = props => props.isLoading;
+    const isErrorConditionFn = props => props.error;
 
     const HitsWithConditionalRendering = withError(
       withLoadingIndicator(
-        withEmpty(withNull(ShowData, conditionFn), conditionFn)
+        withEmpty(withNull(ShowData, isEmptyConditionFn), isEmptyConditionFn)
       )
     );
 
+    const EmptyMessage = () => (
+      <tr>
+        <td colSpan="0">There is no data to show</td>
+      </tr>
+    );
+
+    const LoadingIndicator = () => (
+      <div>
+        <p>Loading data ...</p>
+      </div>
+    );
+
+    const ErrorMessage = props => (
+      <div>
+        <p>{error.message}</p>
+      </div>
+    );
+
     const withConditionalRenderingsWithCompose = compose(
-      withError,
-      withLoadingIndicator,
-      withMaybeFP(conditionFn),
-      withEmptyFP(conditionFn)
+      withEither(isLoadingConditionFn, LoadingIndicator),
+      withEither(isErrorConditionFn, ErrorMessage),
+      withMaybe(isEmptyConditionFn),
+      withEither(conditionFnlength, EmptyMessage)
     );
 
     const HitsWithConditionalRenderingWithCompose = withConditionalRenderingsWithCompose(

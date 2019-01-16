@@ -1,13 +1,14 @@
 import React from "react";
 
-const withMaybeFP = conditionalRenderingFn => Component => props =>
+const withMaybe = conditionalRenderingFn => Component => props =>
   conditionalRenderingFn(props) ? null : <Component {...props} />;
 
-const withEmptyFP = conditionalRenderingFn => Component => props =>
-  !conditionalRenderingFn.length ? (
-    <tr>
-      <td colSpan="{!props.length}">There is no data to show</td>
-    </tr>
+const withEither = (
+  conditionalRenderingFn,
+  EitherComponent
+) => Component => props =>
+  conditionalRenderingFn(props) ? (
+    <EitherComponent />
   ) : (
     <Component {...props} />
   );
@@ -37,8 +38,8 @@ const withError = Component => ({ error, ...others }) =>
   error ? <p>{error.message}</p> : <Component {...others} />;
 
 export {
-  withMaybeFP,
-  withEmptyFP,
+  withMaybe,
+  withEither,
   withNull,
   withEmpty,
   withLoadingIndicator,
