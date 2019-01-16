@@ -1,5 +1,17 @@
 import React from "react";
 
+const withMaybeFP = conditionalRenderingFn => Component => props =>
+  conditionalRenderingFn(props) ? null : <Component {...props} />;
+
+const withEmptyFP = conditionalRenderingFn => Component => props =>
+  !conditionalRenderingFn.length ? (
+    <tr>
+      <td colSpan="{!props.length}">There is no data to show</td>
+    </tr>
+  ) : (
+    <Component {...props} />
+  );
+
 const withNull = (Component, conditionFn) => props =>
   !conditionFn ? null : <Component {...props} />;
 
@@ -24,4 +36,11 @@ const withLoadingIndicator = Component => ({ isLoading, ...others }) =>
 const withError = Component => ({ error, ...others }) =>
   error ? <p>{error.message}</p> : <Component {...others} />;
 
-export { withNull, withEmpty, withLoadingIndicator, withError };
+export {
+  withMaybeFP,
+  withEmptyFP,
+  withNull,
+  withEmpty,
+  withLoadingIndicator,
+  withError,
+};

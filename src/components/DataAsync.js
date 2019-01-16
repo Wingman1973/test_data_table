@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-//import { compose } from "recompose";
+import { compose } from "recompose";
 import {
+  withMaybeFP,
+  withEmptyFP,
   withNull,
   withEmpty,
   withLoadingIndicator,
@@ -44,18 +46,39 @@ class DataAsync extends Component {
   render() {
     const { hits, isLoading, error } = this.state;
     const conditionFn = props => !props.hits;
+
     const HitsWithConditionalRendering = withError(
       withLoadingIndicator(
         withEmpty(withNull(ShowData, conditionFn), conditionFn)
       )
     );
 
+    const withConditionalRenderingsWithCompose = compose(
+      withError,
+      withLoadingIndicator,
+      withMaybeFP(conditionFn),
+      withEmptyFP(conditionFn)
+    );
+
+    const HitsWithConditionalRenderingWithCompose = withConditionalRenderingsWithCompose(
+      ShowData
+    );
+
     return (
-      <HitsWithConditionalRendering
-        error={error}
-        isLoading={isLoading}
-        hits={hits}
-      />
+      <div>
+        <p>Hits With Conditional Rendering</p>
+        <HitsWithConditionalRendering
+          error={error}
+          isLoading={isLoading}
+          hits={hits}
+        />
+        <p>Hits With Conditional Rendering and compose</p>
+        <HitsWithConditionalRenderingWithCompose
+          error={error}
+          isLoading={isLoading}
+          hits={hits}
+        />
+      </div>
     );
   }
 }
